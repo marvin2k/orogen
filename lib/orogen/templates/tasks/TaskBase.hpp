@@ -1,7 +1,7 @@
 /* Generated from orogen/lib/orogen/templates/tasks/TaskBase.hpp */
 
-#ifndef <%= component.name.upcase %>_<%= task.basename.upcase %>_TASK_BASE_HPP
-#define <%= component.name.upcase %>_<%= task.basename.upcase %>_TASK_BASE_HPP
+#ifndef <%= project.name.upcase %>_<%= task.basename.upcase %>_TASK_BASE_HPP
+#define <%= project.name.upcase %>_<%= task.basename.upcase %>_TASK_BASE_HPP
 
 #include <<%= task.superclass.header_file %>>
 
@@ -12,7 +12,7 @@
 #include <rtt/Port.hpp>
 <% end %>
 <% if task.extended_state_support? %>
-#include <<%= component.typekit.name %>/TaskStates.hpp>
+#include <<%= project.typekit.name %>/TaskStates.hpp>
 <% end %>
 
 
@@ -35,7 +35,7 @@
 
 <%= code_before.sort.join("\n") %>
 
-namespace <%= component.name %> {
+namespace <%= project.name %> {
     class <%= task.basename %>;
     /** The oroGen-generated part of <%= task.name %>
      *
