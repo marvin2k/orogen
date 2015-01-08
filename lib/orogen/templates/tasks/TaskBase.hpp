@@ -15,50 +15,61 @@
 #include <<%= project.typekit.name %>/TaskStates.hpp>
 <% end %>
 
+// properties
 <% task.self_properties.sort_by(&:name).each do |p| %>
 <%   type = p.type %>
-<%=  typekit.cxx_gen_includes(*typekit.include_for_type(type)) %>
+// type "<%= type.name %>"
+<%=  project.typekit.cxx_gen_includes(*project.typekit.include_for_type(type)) %>
 extern template class RTT::Property< <%= type.cxx_name %> >;
 <% end %>
 
+// attributes
 <% task.self_attributes.sort_by(&:name).each do |a| %>
 <%   type = a.type %>
-<%=  typekit.cxx_gen_includes(*typekit.include_for_type(type)) %>
+// type "<%= type.name %>"
+<%=  project.typekit.cxx_gen_includes(*project.typekit.include_for_type(type)) %>
 extern template class RTT::Attribute< <%= type.cxx_name %> >;
 <% end %>
 
+// ports
 <% task.self_ports.sort_by(&:name).each do |p| %>
 <%   type = p.type %>
-<%=  typekit.cxx_gen_includes(*typekit.include_for_type(type)) %>
+// type "<%= type.name %>"
+<%=  project.typekit.cxx_gen_includes(*project.typekit.include_for_type(type)) %>
 extern template class <%= p.orocos_class %>< <%= type.cxx_name %> >;
 extern template class RTT::base::ChannelElement< <%= type.cxx_name %> >;
 <% end %>
 
+// dynamic ports
 <% types = task.self_dynamic_ports.
         map { |p| [p.orocos_class, p.type] if p.type }.
         compact %>
 <% types.each do |orocos_class, type| %>
-<%=    typekit.cxx_gen_includes(*typekit.include_for_type(type)) %>
+// type "<%= type.name %>"
+<%=    project.typekit.cxx_gen_includes(*project.typekit.include_for_type(type)) %>
 extern template class <%= orocos_class %>< <%= type.cxx_name %> >;
 extern template class RTT::base::ChannelElement< <%= type.cxx_name %> >;
 <% end %>
 
+// operations
 <% task.self_operations.sort_by(&:name).each do |op| %>
 <%    op.used_types.each do |type| %>
-<%=       typekit.cxx_gen_includes(*typekit.include_for_type(type)) %>
+// type "<%= type.name %>"
+<%=       project.typekit.cxx_gen_includes(*project.typekit.include_for_type(type)) %>
 <%    end %>
 <% end %>
 
+// implemented classes
 <% task.implemented_classes.sort.each do |class_name, include_file| %>
 #include <<%= include_file %>> // to get <%= class_name %>
 <% end %>
 
+// code_before + code_after
 <% code_before, code_after =
     task.base_header_code.partition(&:first)
    code_before.map! { |_, c| c.call }
    code_after.map! { |_, c| c.call }
 %>
-
 <%= code_before.sort.join("\n") %>
 
 namespace <%= project.name %> {
